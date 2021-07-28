@@ -6,4 +6,6 @@ MONGO_DETAILS = config('MONGO_DETAILS')
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
 news_db = client.news
-authors_db = client.authors
+
+article_collection = news_db['articles']
+author_collection = news_db['authors']
