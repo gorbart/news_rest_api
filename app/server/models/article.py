@@ -9,6 +9,7 @@ from app.server.models.basemodels import DBModel
 
 
 class ArticleModel(DBModel):
+    """Base class for Article model"""
     title: str = Field(...)
     text: str = Field(...)
     publication_time: datetime.datetime = Field(...)
@@ -31,6 +32,7 @@ class ArticleModel(DBModel):
 
 
 class UpdateArticleModel(BaseModel):
+    """Class used to update Article model"""
     title: Optional[str]
     text: Optional[str]
     publication_time: Optional[datetime.datetime]
@@ -52,6 +54,7 @@ class UpdateArticleModel(BaseModel):
 
 
 class CreateArticleModel(BaseModel):
+    """Class used to create Article model"""
     title: str
     text: str
     publication_time: str

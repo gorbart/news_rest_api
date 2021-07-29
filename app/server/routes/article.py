@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from bson import json_util
@@ -11,7 +12,7 @@ from app.server.cruds.article import add_article, get_articles, get_article, upd
 from app.server.cruds.author import get_author
 from app.server.models.article import CreateArticleModel, ArticleModel, UpdateArticleModel
 from app.server.routes.author import AUTHOR_NOT_FOUND_MESSAGE
-from app.server.routes.utils import convert_date, convert_to_standard_model, update_entity, get_update_results
+from app.server.routes.utils import convert_to_standard_model, update_entity, get_update_results
 
 ARTICLE_NOT_FOUND_MESSAGE = 'Article with id {} not found'
 
@@ -47,9 +48,10 @@ async def get_all_articles_for_author(author_id: str) -> JSONResponse:
 @router.post('/', response_description='Add new article to database', response_model=ArticleModel)
 async def add_article_data(raw_article: CreateArticleModel = Body(...)) -> JSONResponse:
     raw_article = jsonable_encoder(raw_article)
-    await convert_date(raw_article)
-    await assign_author(raw_article)
+    await convert_date(raw_article)  # date needs to be converted from string to datetime object
+    await assign_author(raw_article)  # author has to be found in database and assigned to article object
     article = await convert_to_standard_model(raw_article, ArticleModel)
+    # dict with attributes gets converted into a model class object
     new_article = await add_article(article)
     new_article = json_util.dumps(new_article)
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=new_article)
@@ -75,3 +77,7 @@ async def delete_article_data(article_id: str) -> JSONResponse:
 async def assign_author(article: dict) -> None:
     author = await get_author(article['author'])
     article['author'] = author
+
+
+async def convert_date(entity: dict) -> None:
+    entity['publication_time'] = datetime.strptime(entity['publication_time'], '%Y-%m-%dT%H:%M')

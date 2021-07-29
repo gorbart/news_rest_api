@@ -23,8 +23,7 @@ class PyObjectId(ObjectId):
 
 
 class DBModel(BaseModel):
-    """
-    DBModel class has id attribute which is a common attribute for all models being saved into database.
-    """
+    """DBModel class has id attribute which is a common attribute for all models being saved into database. It's
+    automatically assigned to a model on its creation"""
 
     id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')

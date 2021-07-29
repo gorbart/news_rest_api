@@ -34,6 +34,7 @@ async def get_one_author(author_id: str) -> JSONResponse:
 async def add_author_data(raw_author: AuthorModel = Body(...)) -> JSONResponse:
     raw_author = jsonable_encoder(raw_author)
     author = await convert_to_standard_model(raw_author, AuthorModel)
+    # dict with attributes gets converted into a model class object
     new_author = await add_author(author)
     new_author = json_util.dumps(new_author)
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=new_author)

@@ -7,6 +7,7 @@ from app.server.models.basemodels import DBModel
 
 
 class AuthorModel(DBModel):
+    """Base class used to create and get Author model"""
     name: str
     surname: str
     website: Optional[str]
@@ -25,6 +26,7 @@ class AuthorModel(DBModel):
 
 
 class UpdateAuthorModel(BaseModel):
+    """Class used to create Author model"""
     name: Optional[str]
     surname: Optional[str]
     website: Optional[str]

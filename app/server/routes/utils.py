@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Callable
 
 from bson import json_util
@@ -14,10 +13,6 @@ async def convert_to_standard_model(entity: dict, entity_class):
     entity = entity_class(**entity).dict()
     entity['_id'] = entity.pop('id')
     return entity
-
-
-async def convert_date(entity: dict) -> None:
-    entity['publication_time'] = datetime.strptime(entity['publication_time'], '%Y-%m-%dT%H:%M')
 
 
 async def update_entity(entity_id: str, received_entity_data: BaseModel, update_function: Callable) -> bool:
