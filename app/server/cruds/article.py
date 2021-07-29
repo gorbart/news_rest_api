@@ -1,7 +1,7 @@
 from typing import List
 
-from app.cruds.database import article_collection
-from app.cruds.utils import *
+from app.server.cruds.database import article_collection
+from app.server.cruds.utils import get_entities, get_entity, add_entity, update_entity, delete_entity
 
 
 # Get all the articles

@@ -1,10 +1,11 @@
 from typing import List
-
-from app.cruds.database import author_collection
-from app.cruds.utils import *
+from app.server.cruds.utils import get_entities, get_entity, add_entity, update_entity, delete_entity
+from app.server.cruds.database import author_collection
 
 
 # Get all the authors
+
+
 async def get_authors() -> List[dict]:
     return await get_entities(author_collection)
 

@@ -3,7 +3,7 @@ from typing import Optional
 from bson import ObjectId
 from pydantic import BaseModel
 
-from app.models.basemodels import DBModel
+from app.server.models.basemodels import DBModel
 
 
 class AuthorModel(DBModel):
