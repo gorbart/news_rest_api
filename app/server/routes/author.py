@@ -9,7 +9,7 @@ from starlette.responses import JSONResponse
 from app.server.cruds.author import add_author, get_authors, get_author, update_author, delete_author
 from app.server.models.article import AuthorModel
 from app.server.models.author import UpdateAuthorModel
-from app.server.routes.utils import update_entity, get_update_results
+from app.server.routes.utils import update_entity, get_update_results, convert_to_standard_model
 
 AUTHOR_NOT_FOUND_MESSAGE = 'Author with id {} not found'
 
@@ -32,8 +32,9 @@ async def get_one_author(author_id: str) -> dict:
 
 
 @router.post('/', response_description='Add new author to database', response_model=AuthorModel)
-async def add_author_data(author: AuthorModel = Body(...)) -> JSONResponse:
-    author = jsonable_encoder(author)
+async def add_author_data(raw_author: AuthorModel = Body(...)) -> JSONResponse:
+    raw_author = jsonable_encoder(raw_author)
+    author = await convert_to_standard_model(raw_author, AuthorModel)
     new_author = await add_author(author)
     new_author = json_util.dumps(new_author)
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=new_author)

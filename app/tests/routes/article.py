@@ -43,13 +43,15 @@ def test_add_article():
 
 
 def test_update_article():
-    put_response = client.put(f'/article/{ARTICLE_ID}', json={
-        'text': 'ttttteeeeexxxxxtttttt',
-    })
+    add_response = client.post('/article/', json=SAMPLE_ARTICLE_DICT)
+
+    article_id = json.loads(add_response.json())['_id']['$oid']
+
+    put_response = client.put(f'/article/{article_id}', json={'text': 'ttttteeeeexxxxxtttttt'})
 
     assert put_response.status_code == 200
 
-    get_response = client.get(f'/article/{ARTICLE_ID}')
+    get_response = client.get(f'/article/{article_id}')
 
     assert get_response.json()['text'] == "ttttteeeeexxxxxtttttt"
 
@@ -60,10 +62,10 @@ def test_update_article_without_arguments():
     assert put_response.status_code == 202
 
 
-def test_detele_article():
+def test_delete_article():
     add_response = client.post('/article/', json=SAMPLE_ARTICLE_DICT)
 
-    article_id = json.loads(add_response.json())['_id']
+    article_id = json.loads(add_response.json())['_id']['$oid']
 
     delete_response = client.delete(f'/article/{article_id}')
 

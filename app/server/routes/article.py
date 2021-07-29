@@ -53,7 +53,7 @@ async def update_article_data(article_id: str, received_article_data: UpdateArti
 
 @router.delete('/{article_id}', response_description='Delete an article from database')
 async def delete_article_data(article_id: str) -> JSONResponse:
-    if delete_article(article_id):
+    if await delete_article(article_id):
         return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
 
     raise HTTPException(status_code=404, detail=ARTICLE_NOT_FOUND_MESSAGE.format(article_id))
