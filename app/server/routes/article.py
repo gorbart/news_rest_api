@@ -6,9 +6,11 @@ from fastapi.encoders import jsonable_encoder
 from starlette import status
 from starlette.responses import JSONResponse
 
-from app.server.cruds.article import add_article, get_articles, get_article, update_article, delete_article
+from app.server.cruds.article import add_article, get_articles, get_article, update_article, delete_article, \
+    get_articles_for_author
 from app.server.cruds.author import get_author
 from app.server.models.article import CreateArticleModel, ArticleModel, UpdateArticleModel
+from app.server.routes.author import AUTHOR_NOT_FOUND_MESSAGE
 from app.server.routes.utils import convert_date, convert_to_standard_model, update_entity, get_update_results
 
 ARTICLE_NOT_FOUND_MESSAGE = 'Article with id {} not found'
@@ -17,18 +19,29 @@ router = APIRouter()
 
 
 @router.get('/', response_description='List all articles', response_model=List[ArticleModel])
-async def get_article_list() -> List[dict]:
+async def get_article_list() -> JSONResponse:
     articles = await get_articles()
-    return articles
+    return JSONResponse(status_code=status.HTTP_200_OK, content=articles)
 
 
 @router.get('/{article_id}', response_description='Get an article with given id', response_model=ArticleModel)
-async def get_one_article(article_id: str) -> dict:
+async def get_one_article(article_id: str) -> JSONResponse:
     article = await get_article(article_id)
     if article is not None:
-        return article
+        return JSONResponse(status_code=status.HTTP_200_OK, content=article)
 
     raise HTTPException(status_code=404, detail=ARTICLE_NOT_FOUND_MESSAGE.format(article_id))
+
+
+@router.get('/author/{author_id}', response_description='Get all articles written by an author with given id',
+            response_model=List[ArticleModel])
+async def get_all_articles_for_author(author_id: str) -> JSONResponse:
+    articles = await get_articles_for_author(author_id)
+
+    if articles is not None:
+        return JSONResponse(status_code=status.HTTP_200_OK, content=json_util.dumps(articles))
+
+    raise HTTPException(status_code=404, detail=AUTHOR_NOT_FOUND_MESSAGE.format(author_id))
 
 
 @router.post('/', response_description='Add new article to database', response_model=ArticleModel)

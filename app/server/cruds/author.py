@@ -4,8 +4,6 @@ from app.server.cruds.database import author_collection
 
 
 # Get all the authors
-
-
 async def get_authors() -> List[dict]:
     return await get_entities(author_collection)
 

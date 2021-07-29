@@ -22,6 +22,12 @@ def test_get_articles():
     assert response.status_code == 200
 
 
+def test_get_articles_for_author():
+    response = client.get(f"/article/author/{SAMPLE_ARTICLE_DICT['author']}")
+
+    assert response.status_code == 200
+
+
 def test_get_article():
     response = client.get(f'/article/{ARTICLE_ID}')
 
